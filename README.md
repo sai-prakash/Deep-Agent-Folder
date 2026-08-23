@@ -1,55 +1,45 @@
-# AI Engineering Mastery
+# AI Engineering Mastery Lab v2
 
-A GitHub-native, learn-by-building course based on the six AI application engineering skill areas described by Andrew Ng: **LLM foundations, grounding with data, agentic systems, evaluation-driven development, operating in production, and machine learning foundations** — plus an engineering bootcamp and production capstone.
+An evidence-driven, LLM-native, GitHub-native learning program inspired by Andrew Ng’s AI Engineering Skills Map.
 
-## What is in this repository
+## What changed in v2
 
-- **Interactive GitHub Pages course**: no application backend and no runtime package dependencies.
-- **84 hands-on lessons** following: Understand → Predict → Build → Break → Measure → Improve → Explain.
-- **7 portfolio systems** and a production capstone.
-- **Local-first progress** in the browser.
-- **GitHub checkpoint sync**: learners create a prefilled progress issue; a deterministic Action validates and stores `progress/<github-user>.json`.
-- **GitHub Agentic Workflow sources** for learning coach, lab reviewer, and course curator.
-- **CI and Pages deployment** via GitHub Actions.
+- 101 lessons with mechanism-level explanations, worked failures, misconceptions, recall and transfer scenarios.
+- 76 browser-executable labs: 71 Python, 3 JavaScript and 2 SQL.
+- Python runs in **Pyodide 314.0.4 inside a module Web Worker**; JavaScript runs in an isolated Worker; SQL uses in-memory SQLite through Python.
+- Environment-heavy labs use GitHub Codespaces and require a real public commit or PR artifact.
+- OpenRouter learning studio supports `openrouter/free` and **Ox Alpha (`stealth/ox-alpha`)** plus custom models.
+- Expert Panel runs teacher, systems-engineer and evaluator perspectives and synthesizes their disagreement.
+- Mastery states: Introduced → Practiced → Verified → Production-ready.
+- Verified is gated on implementation evidence **and** rubric review; prose alone cannot pass.
+- Eight named synthetic data/incident collections in a versioned dataset pack for retrieval, evals, red teaming, model routing and ML.
 
-## Run locally
+## Security / privacy
+
+The OpenRouter key is stored only in `sessionStorage`. It is never placed in GitHub progress, course exports, source files or service-worker cache. Free/stealth model providers may have data-retention policies: never submit secrets, private employer code, customer data, regulated data or credentials.
+
+## Development
 
 ```bash
 python -m http.server 8000
-# open http://localhost:8000
+# http://localhost:8000
 ```
 
-## Production URL
+Run the production quality gate:
 
-After Pages is enabled with **Settings → Pages → Build and deployment → GitHub Actions**, the deployment workflow publishes this repository at:
+```bash
+node scripts/quality-gate.mjs
+python scripts/security-audit.py
+```
 
-`https://sai-prakash.github.io/Deep-Agent-Folder/`
+## OpenRouter examples
 
-## Progress architecture
+```bash
+export OPENROUTER_API_KEY='...'
+python examples/openrouter_python.py
+node examples/openrouter_node.mjs
+```
 
-The browser never receives a GitHub write token.
+## CI agents
 
-1. Lesson state is saved instantly in `localStorage`.
-2. **GitHub checkpoint** opens a prefilled issue containing a compact JSON snapshot.
-3. `.github/workflows/progress-sync.yml` validates the snapshot, derives identity from the authenticated issue author, writes `progress/<user>.json`, comments, and closes the issue.
-4. The course can restore progress by reading the public repository file through the GitHub Contents API.
-
-This makes GitHub the durable progress database while keeping the site static.
-
-## Agent suite
-
-GitHub Agentic Workflows are defined as Markdown sources:
-
-- `learning-coach.md` — Socratic help on `[Help]` issues.
-- `lab-reviewer.md` — reviews learning/lab PRs against evidence and eval quality.
-- `course-curator.md` — periodically identifies stale material and proposes tightly scoped updates.
-
-GitHub Agentic Workflows are currently public preview. Their `.md` source must be compiled to hardened `.lock.yml` with `gh aw compile`. Supported engines include Copilot, Codex, Claude and Gemini. Authentication depends on the engine. See `AGENTS.md`.
-
-## Course quality rule
-
-A lesson is not complete because it was read. A learner must record a prediction, build something, reproduce a failure, measure it, and pass the mastery check.
-
-## License
-
-MIT for the course software and original curriculum structure. External referenced concepts and trademarks remain the property of their respective owners.
+The deterministic quality gate blocks structural/course regressions. `quality-reviewer.md` defines a semantic GitHub Agentic Workflow reviewer; `semantic-quality.yml` optionally invokes Ox Alpha through OpenRouter when the repository secret `OPENROUTER_API_KEY` exists. Semantic review is advisory unless explicitly made a required branch protection check.

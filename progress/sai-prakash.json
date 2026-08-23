@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "user": "sai-prakash",
-  "completed": [],
-  "quiz": {},
-  "streak": 0,
-  "updatedAt": "2026-08-23T15:30:00Z",
+  "practiced": [],
+  "verified": [],
+  "reviews": {},
+  "updatedAt": "2026-08-23T16:55:00Z",
   "sourceIssue": null
 }
