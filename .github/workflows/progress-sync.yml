@@ -1,0 +1,65 @@
+name: Persist learner progress
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: progress-${{ github.event.issue.user.login }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: startsWith(github.event.issue.title, '[Progress Sync]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Validate and write progress
+        env:
+          EVENT_PATH: ${{ github.event_path }}
+        run: |
+          python - <<'PY'
+          import json,re,os,pathlib,datetime
+          event=json.load(open(os.environ['EVENT_PATH']))
+          body=event['issue'].get('body') or ''
+          user=event['issue']['user']['login']
+          m=re.search(r'<!-- PROGRESS_JSON_START -->\s*```json\s*(.*?)\s*```\s*<!-- PROGRESS_JSON_END -->',body,re.S)
+          if not m:
+              m=re.search(r'```json\s*(.*?)\s*```',body,re.S)
+          if not m: raise SystemExit('No progress JSON block found')
+          data=json.loads(m.group(1))
+          if data.get('schemaVersion')!=1: raise SystemExit('Unsupported schemaVersion')
+          claimed=(data.get('user') or '').lower()
+          if claimed and claimed!=user.lower(): raise SystemExit('Checkpoint username must match authenticated issue author')
+          valid=set()
+          for path in pathlib.Path('data').glob('s*.js'):
+              valid.update(re.findall(r'\"(S\dL\d+)\"',path.read_text()))
+          completed=[x for x in data.get('completed',[]) if x in valid]
+          if len(completed)!=len(set(completed)): completed=list(dict.fromkeys(completed))
+          quiz={k:v for k,v in (data.get('quiz') or {}).items() if k in valid and isinstance(v,dict) and v.get('correct') is True}
+          out={'schemaVersion':1,'user':user,'completed':completed,'quiz':quiz,'streak':max(0,min(int(data.get('streak') or 0),10000)),'updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceIssue':event['issue']['html_url']}
+          pathlib.Path('progress').mkdir(exist_ok=True)
+          pathlib.Path('progress',f'{user}.json').write_text(json.dumps(out,indent=2)+'\n')
+          print(f'Validated {len(completed)} completed lessons for {user}')
+          PY
+      - name: Commit checkpoint
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add progress/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "progress: sync @${{ github.event.issue.user.login }}"
+          git push
+      - name: Confirm and close checkpoint issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE" --body "Progress validated and persisted to \`progress/${{ github.event.issue.user.login }}.json\`. Keep building."
+          gh issue close "$ISSUE" --reason completed

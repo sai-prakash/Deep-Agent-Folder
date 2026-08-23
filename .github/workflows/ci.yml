@@ -1,0 +1,39 @@
+name: Course CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths-ignore: ["progress/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate JavaScript and course structure
+        run: |
+          node --check app.js
+          node --check course-data.js
+          for f in data/s*.js; do node --check "$f"; done
+          node - <<'JS'
+          global.window=global;
+          for (let i=0;i<8;i++) require(`./data/s${i}.js`);
+          require('./course-data.js');
+          const data=global.COURSE_DATA;
+          const lessons=data.schools.flatMap(s=>s.lessons);
+          const ids=lessons.map(l=>l.id);
+          if(data.schools.length!==8) throw Error('expected 8 schools');
+          if(lessons.length!==84) throw Error('expected 84 lessons');
+          if(new Set(ids).size!==ids.length) throw Error('duplicate lesson ids');
+          for(const l of lessons){for(const k of ['concept','mentalModel','predict','build','breakIt','measure','improve','explain','mastery','quiz'])if(!l[k])throw Error(`${l.id} missing ${k}`);}
+          console.log(`validated ${data.schools.length} schools and ${lessons.length} lessons`);
+          JS
+      - name: Check for accidental secrets
+        run: |
+          if grep -RInE '(sk-proj-|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})' --exclude-dir=.git .; then
+            echo 'Potential secret detected' >&2; exit 1;
+          fi

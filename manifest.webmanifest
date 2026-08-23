@@ -1,0 +1,9 @@
+{
+  "name": "AI Engineering Mastery",
+  "short_name": "AI Mastery",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#f4f0e8",
+  "icons": []
+}
