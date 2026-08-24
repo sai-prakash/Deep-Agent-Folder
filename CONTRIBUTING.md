@@ -1,17 +1,14 @@
 # Contributing
 
-## A good course change includes evidence
+Every lesson change must answer: **what can the learner now do, reproduce, measure or debug that they could not before?**
 
-For curriculum or lab changes, include:
+Required for lesson changes:
+- mechanism-level explanation;
+- realistic worked failure;
+- deliberate break case;
+- measurable outcome;
+- transfer scenario;
+- references;
+- executable lab or explicit GitHub artifact requirement.
 
-1. The learner problem or outdated behavior.
-2. The smallest proposed change.
-3. How you verified technical accuracy.
-4. Which lesson/project/eval is affected.
-5. Any new failure case or regression check that should be retained.
-
-## Lesson design standard
-
-Every technical lesson should answer: what is it, what mental model helps, what should the learner build, how can it fail, what should be measured, and what proves mastery.
-
-Do not add a framework merely because it is popular. Prefer durable engineering concepts, then map current tools onto them.
+Do not merge framework churn without a durable engineering reason. Do not weaken mastery gates to improve completion percentages.

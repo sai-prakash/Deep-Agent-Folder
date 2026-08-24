@@ -1,0 +1,9 @@
+{
+  "name": "ai-engineering-mastery",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "quality": "node scripts/quality-gate.mjs && python scripts/security-audit.py",
+    "serve": "python -m http.server 8000"
+  }
+}
