@@ -18,11 +18,12 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check app.js
+          node --check launch.js
           node --check course-data.js
           node --check data-v2/loader.js
           node --check datasets/pack.js
           node --check workers/runtime-worker.mjs
-      - name: Curriculum, lab and dataset audit
+      - name: Curriculum, lab, landing and dataset audit
         run: node scripts/quality-gate.mjs
       - name: Secret, privacy and runtime-boundary audit
         run: python scripts/security-audit.py
