@@ -2,8 +2,8 @@
 
 An evidence-driven, LLM-native, GitHub-native learning program. The product was originally inspired by Andrew Ng & DeepLearning.AI’s public **AI Engineering Skills Map** (August 2026) and is independently designed and implemented. **This project is not affiliated with, sponsored by, endorsed by, reviewed by, or certified by Andrew Ng or DeepLearning.AI.**
 
-- **Product home + free diagnostic:** https://sai-prakash.github.io/Deep-Agent-Folder/
-- **101-lesson mastery lab:** https://sai-prakash.github.io/Deep-Agent-Folder/course.html
+- **Product home + free diagnostic:** https://sai-prakash.github.io/ai-engineering-mastery/
+- **101-lesson mastery lab:** https://sai-prakash.github.io/ai-engineering-mastery/course.html
 - **Source framework:** https://www.andrewng.org/writing
 
 ## What changed in v2

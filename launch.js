@@ -1,5 +1,5 @@
 (() => {
-  const repo = 'https://github.com/sai-prakash/Deep-Agent-Folder';
+  const repo = 'https://github.com/sai-prakash/ai-engineering-mastery';
   const STORAGE = 'ae-diagnostic-v2';
   const dimensions = {
     foundations: { label: 'Engineering foundations', school: 'S0' },
