@@ -141,7 +141,7 @@
     if(!r){try{r=JSON.parse(localStorage.getItem(STORAGE)||'null')}catch{}}
     if(!r){setView('diagnostic');return}
     const title='[Founding Beta] AI Engineering Mastery application';
-    const body=`## Founding Beta application\n\n**Diagnostic:** ${r.total}/100 — ${r.name}\n\n### Skill profile\n${Object.entries(r.scored).map(([k,v])=>`- ${dimensions[k].label}: ${v}/100`).join('\n')}\n\n### About me\n- Current role / years of experience:\n- What I build today:\n- AI engineering goal for the next 90 days:\n- Hardest problem I want this program to help me solve:\n- GitHub / portfolio (optional):\n\n### Commitment\n- [ ] I can spend at least 4 focused hours/week.\n- [ ] I am comfortable giving blunt product feedback.\n\n> Do not include employer-confidential, customer, regulated or proprietary information.`;
+    const body=`## Founding Beta application\n\n**Diagnostic:** ${r.total}/100 — ${r.name}\n\n### Public application\nThis GitHub issue is public. Keep this application intentionally minimal.\n\n- [ ] I want to test the Founding Beta.\n- [ ] I can spend at least 4 focused hours/week.\n- [ ] I am comfortable giving blunt product feedback.\n\n### Optional\nIn one sentence, what kind of AI engineering skill do you most want to strengthen?\n\n> Do not include employer-confidential, customer, regulated, proprietary, private, contact, or identifying information. If selected, any deeper context can be requested separately through an appropriate private channel.`;
     window.open(`${repo}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`,'_blank','noopener');
   }
   $('#applyBtn').addEventListener('click',openApplication);
